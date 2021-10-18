@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 class CamadaEnlace:
     ignore_checksum = False
 
@@ -43,6 +45,7 @@ class Enlace:
     def __init__(self, linha_serial):
         self.linha_serial = linha_serial
         self.linha_serial.registrar_recebedor(self.__raw_recv)
+        self.msgQuebrada = ''
 
     def registrar_recebedor(self, callback):
         self.callback = callback
@@ -51,7 +54,9 @@ class Enlace:
         # TODO: Preencha aqui com o código para enviar o datagrama pela linha
         # serial, fazendo corretamente a delimitação de quadros e o escape de
         # sequências especiais, de acordo com o protocolo CamadaEnlace (RFC 1055).
-        pass
+        datagrama = datagrama.replace(b'\xDB', b'\xDB\xDD')
+        datagrama = datagrama.replace(b'\xC0', b'\xDB\xDC')
+        self.linha_serial.enviar(b'\xC0' + datagrama + b'\xC0')
 
     def __raw_recv(self, dados):
         # TODO: Preencha aqui com o código para receber dados da linha serial.
