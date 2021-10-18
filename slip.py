@@ -76,4 +76,11 @@ class Enlace:
             mensagem = [item.replace(b'\xDB\xDC', b'\xC0') for item in mensagem]
             for elemento in mensagem:
                 if not elemento == b'':
-                    self.callback(elemento)
+                    try:
+                        self.callback(elemento)
+                    except:
+                    # ignora a exceção, mas mostra na tela
+                        import traceback
+                        traceback.print_exc()
+                    finally:
+                        mensagem = []
