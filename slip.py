@@ -66,4 +66,14 @@ class Enlace:
         # vir quebrado de várias formas diferentes - por exemplo, podem vir
         # apenas pedaços de um quadro, ou um pedaço de quadro seguido de um
         # pedaço de outro, ou vários quadros de uma vez só.
-        pass
+        #if self.msgQuebrada.startswith(b'\xC0'):
+        if not self.msgQuebrada.endswith(b'\xC0'):
+            self.msgQuebrada = self.msgQuebrada + dados
+        if self.msgQuebrada.endswith(b'\xC0'):
+            mensagem = self.msgQuebrada.split(b'\xC0')
+            self.msgQuebrada = b''
+            mensagem = [item.replace(b'\xDB\xDD', b'\xDB') for item in mensagem]
+            mensagem = [item.replace(b'\xDB\xDC', b'\xC0') for item in mensagem]
+            for elemento in mensagem:
+                if not elemento == b'':
+                    self.callback(elemento)
